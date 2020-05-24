@@ -4,8 +4,6 @@ import 'package:myexpenses/models/transaction.dart';
 import 'package:myexpenses/widgets/new_transaction.dart';
 import 'package:myexpenses/widgets/transaction_list.dart';
 
-import './widgets/user_transactions.dart';
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -30,18 +28,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [
-    Transaction(
-        id: 't1',
-        title: 'New shoes',
-        amount: 69.99,
-        date: DateTime.now()
-    ),
-    Transaction(
-        id: 't2',
-        title: 'Groceries',
-        amount: 16.50,
-        date: DateTime.now()
-    )
+
   ];
 
   void _addTransaction(String title, double amount){
