@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myexpenses/database/database_service.dart';
 import 'package:myexpenses/models/transaction.dart';
 import 'package:myexpenses/widgets/chart.dart';
 import 'package:myexpenses/widgets/new_transaction.dart';
@@ -43,8 +44,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _userTransactions = [
-  ];
+  final List<Transaction> _userTransactions = [];
 
   List<Transaction> get _recentTransactions{
     return _userTransactions.where((tx) {
@@ -54,22 +54,20 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addTransaction(String title, double amount, DateTime transactionDate){
+  Future<void> _addTransaction(String title, double amount, DateTime transactionDate) async {
     final newTransaction = Transaction(
       title: title,
       amount: amount,
       date: transactionDate,
       id: DateTime.now().toString(),
     );
-    setState(() {
-      _userTransactions.add(newTransaction);
-    });
+    await DatabaseService.instance.insertTransaction(newTransaction);
+    updateTransactionsList();
   }
 
   void _deleteTransaction(String id){
-    setState(() {
-      _userTransactions.removeWhere((tx) => tx.id == id);
-    });
+    DatabaseService.instance.deleteTransaction(id);
+    updateTransactionsList();
   }
 
   void _startAddNewExpense(BuildContext context){
@@ -82,8 +80,18 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void updateTransactionsList() async {
+    List<Transaction> transactions = await DatabaseService.instance.getAllTransaction();
+    setState(() {
+      _userTransactions.clear();
+      _userTransactions.addAll(transactions);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    updateTransactionsList();
+
     final appbar = AppBar(
       actions: <Widget>[
         IconButton(
@@ -103,9 +111,18 @@ class _MyHomePageState extends State<MyHomePage> {
             height: (MediaQuery.of(context).size.height - appbar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.3,
             child: Chart(_recentTransactions)
           ),
-           Container(
-               height: (MediaQuery.of(context).size.height - appbar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.7,
-               child: TransactionList(_userTransactions, _deleteTransaction)
+           FutureBuilder<List<Transaction>>(
+             future: DatabaseService.instance.getAllTransaction(),
+             builder: (context, AsyncSnapshot<List<Transaction>> snapshot) {
+               if(snapshot.hasData){
+                 return Container(
+                     height: (MediaQuery.of(context).size.height - appbar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.7,
+                     child: TransactionList(snapshot.data, _deleteTransaction)
+                 );
+               } else {
+                 return Center(child: CircularProgressIndicator());
+               }
+             },
            ),
         ],),
       ),
