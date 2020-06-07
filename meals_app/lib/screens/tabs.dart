@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealsapp/screens/categories.dart';
 import 'package:mealsapp/screens/favourites.dart';
+import 'package:mealsapp/widgets/drawer.dart';
 
 class Tabs extends StatefulWidget{
 
@@ -14,6 +15,7 @@ class _TabsState extends State<Tabs> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       child: Scaffold(
+        drawer: MainDrawer(),
         appBar: AppBar(
           title: Text('Meals'),
           bottom: TabBar(

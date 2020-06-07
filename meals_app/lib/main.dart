@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealsapp/screens/categories.dart';
 import 'package:mealsapp/screens/category_meals.dart';
+import 'package:mealsapp/screens/filters.dart';
 import 'package:mealsapp/screens/meal_detail.dart';
 import 'package:mealsapp/screens/tabs.dart';
 
@@ -36,7 +37,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/' : (context) => Tabs(),
         CategoryMeals.routeName : (context) => CategoryMeals(),
-        MealDetails.routeName : (context) => MealDetails()
+        MealDetails.routeName : (context) => MealDetails(),
+        Filters.routeName : (context) => Filters(),
       },
     );
   }
