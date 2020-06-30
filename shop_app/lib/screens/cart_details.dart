@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopapp/providers/Orders.dart';
 import 'package:shopapp/providers/cart.dart';
 import 'package:shopapp/widgets/cart_item.dart' as ci;
 
@@ -32,23 +33,30 @@ class CartDetails extends StatelessWidget {
                     label: Text(
                       '\$${cart.totalAmount}',
                       style: TextStyle(
-                        color: Theme.of(context).primaryTextTheme.headline6.color,
+                        color:
+                            Theme.of(context).primaryTextTheme.headline6.color,
                       ),
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
                   FlatButton(
-                    child: Text(
-                      'Order Now',
-                    ),
-                    onPressed: () {},
+                    child: Text('Order Now',),
+                    onPressed: () {
+                      Provider.of<Orders>(context, listen: false).addOrder(
+                          cart.items.values.toList(),
+                          cart.totalAmount
+                      );
+                      cart.clear();
+                    },
                     color: Theme.of(context).primaryColor,
                   )
                 ],
               ),
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: cart.items.length,
@@ -65,5 +73,4 @@ class CartDetails extends StatelessWidget {
       ),
     );
   }
-
 }
