@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopapp/providers/Orders.dart';
+import 'package:shopapp/providers/orders.dart';
 import 'package:shopapp/widgets/app_drawer.dart';
 import 'package:shopapp/widgets/order_item.dart' as oi;
 
