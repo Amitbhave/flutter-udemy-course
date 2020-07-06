@@ -22,7 +22,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   var _editedProduct = Product(id: null, title: '', price: 0, description: '', imageUrl: '',);
   var _initValues = {
     'title': '',
-    'price': 0,
+    'price': '',
     'description': '',
     'imageUrl': '',
   };
@@ -88,8 +88,26 @@ class _EditProductScreenState extends State<EditProductScreen> {
       });
       Navigator.of(context).pop();
     } else {
-      Provider.of<ProductsProvider>(context, listen: false).addProduct(_editedProduct)
-      .then((_) {
+      Provider.of<ProductsProvider>(context, listen: false)
+          .addProduct(_editedProduct)
+          .catchError((error){
+            return showDialog<Null>(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: Text('An error occurred'),
+                content: Text('Something went wrong!'),
+                actions: [
+                  FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            );
+      }).then((_) {
+        print('setting loading false');
         setState(() {
           _isLoading = false;
         });
