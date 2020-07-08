@@ -21,7 +21,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) {
-    const url = 'your_url';
+    const url = 'https://flutter-shop-app-e3353.firebaseio.com/products.json';
     return post(
       url,
       body: json.encode({
@@ -48,7 +48,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> fetchProducts() {
-    const url = 'your_url';
+    const url = 'https://flutter-shop-app-e3353.firebaseio.com/products.json';
     return get(url)
         .catchError((error) {
           print(error);
@@ -73,7 +73,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> updateProduct(String id, Product newProduct) {
-    final url = 'your_url';
+    final url = 'https://flutter-shop-app-e3353.firebaseio.com/products/$id.json';
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if(prodIndex >= 0) {
       return patch(
@@ -93,7 +93,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) {
-    final url = 'your_url';
+    final url = 'https://flutter-shop-app-e3353.firebaseio.com/products/$id.json';
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
     _items.removeWhere((prod) => prod.id == id);
