@@ -9,15 +9,24 @@ class OrderDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ordersData = Provider.of<Orders>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('My Orders'),
       ),
       drawer: AppDrawer(),
-      body: ListView.builder(
-        itemCount: ordersData.orders.length,
-        itemBuilder: (ctx, index) => oi.OrderItem(ordersData.orders[index]),
+      body: FutureBuilder(
+        future: Provider.of<Orders>(context, listen: false).fetchOrders(),
+        builder: (ctx, dataSnapshot) {
+          if(dataSnapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator(),);
+          }
+          return Consumer<Orders>(
+            builder: (ctx, ordersData, child) => ListView.builder(
+              itemCount: ordersData.orders.length,
+              itemBuilder: (ctx, index) => oi.OrderItem(ordersData.orders[index]),
+            ),
+          );
+        },
       ),
     );
   }
